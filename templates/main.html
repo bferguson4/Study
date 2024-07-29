@@ -1,0 +1,52 @@
+{% load static %}
+<html>  
+
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/style.css' %}">
+
+    <body>
+        <div class="header">
+            <h1>Study</h1>
+        </div>
+
+        <div class="popup">
+            <form class="study_popup"  id="popup" method="POST" enctype="multipart/form-data" autocomplete="off"> 
+                {% csrf_token %} 
+
+                {{ form.as_p }} 
+                <input type="submit" value="Create Set"> 
+            </form>  
+        </div>
+
+        <hr>
+
+        <section class="study_sets" >
+            <h2>Study Sets</h2>
+            {% if study_sets %}
+            <table>
+                <tbody>
+                    {% for set in study_sets %} 
+                    <tr>
+                        <td class="set">
+                                <strong>></strong>
+                                <a href="{% url 'create' set.id %}">{{ set.name }}</a>
+                                <form method="POST" action = "{% url 'delete_set' %}">
+                                    {% csrf_token %} 
+                                    <input type="hidden" name="delete" value={{set.id}}>
+                                    <button class="delete_icon" type="submit"><img src="{% static 'images/trash.png' %}"></button>
+                                </form> 
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% else %}
+
+            <p>Make Study Sets!</p>
+
+            {% endif %}
+            
+        </section>
+    </body>
+</html>
+

@@ -1,0 +1,64 @@
+{% load static %}
+
+<html>
+
+
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/style.css' %}">
+
+
+    <body>
+        <section class="flashcard_links">
+            <a href="{% url 'create' set_id %}">
+                <img class="back_arrow"  src="{% static 'images/back_arrow.png' %}">
+            </a>
+        </section>
+
+        {% if flashcard %}
+        <div class="flashcard" id="{{flashcard.id}}" onclick="show(this.id)"> 
+            <p style="visibility: visible;" id="q">{{ flashcard.question }}</p>
+            <p style="visibility: hidden;" id="a">{{ flashcard.answer }}</p>
+            <div class="diffButtons" id="db"  style="visibility: hidden;" >
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="button_value" id="buttonValue">
+                    <button type="submit" onclick="setDifficulty(this.value)" value="Easy">Easy</button>
+                    <button type="submit" onclick="setDifficulty(this.value)" value="Hard">Hard</button>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <form class="reset_button" method="post">
+            {% csrf_token %}
+            <button type="submit"> 
+                <img src="{% static 'images/reset.png' %}">
+            </button>
+        </form>
+
+        {% endif %}
+    </body>
+</html>
+
+<script>
+
+
+    function show(id) {
+        var flashcard = document.getElementById(id)
+        var flashcardContent = flashcard.getElementsByTagName("p")
+        var question = flashcardContent[0]
+        var answer = flashcardContent[1]
+        
+        if (question.style['visibility'] == "visible") {
+            answer.setAttribute("style", "visibility: visible")
+            question.setAttribute("style", "visibility: hidden")
+            document.getElementById("db").setAttribute("style", "visibility: visible")
+        } else {
+            answer.setAttribute("style", "visibility: hidden")
+            question.setAttribute("style", "visibility: visible")
+        }
+    }
+
+    function setDifficulty(value) {
+        document.getElementById("buttonValue").value = value;
+    }
+
+</script>

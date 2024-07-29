@@ -1,0 +1,45 @@
+<html>
+
+    <style>
+
+        .flashcard {
+            margin: 0 auto;
+            margin-bottom: 5mm;
+            text-align: center;
+            border: 2px solid black;
+            width: 30%;
+            height: auto;
+        }
+
+            
+    </style>
+
+    <body>
+        {% for flashcard in flashcards %}
+        <div class="flashcard" id="{{flashcard.id}}"> 
+            <p id="q">{{ flashcard.question }}</p>
+            <p id="a">{{ flashcard.answer }}</p>
+        </div>
+        {% endfor %}
+
+        <div class="warning">
+            <p>Are you sure?</p>
+            <form method="POST" action = "{% url 'delete_set' %}">
+                {% csrf_token %} 
+                <input type="hidden" id="delete" name="delete" value={{set_id}}>
+                <button name="yes" type="submit">Yes</button>
+                <button onclick="cancelDeletion()" type="submit">No</button>
+            </form> 
+        </div>
+    </body>
+
+</html>
+
+<script>
+
+    function cancelDeletion() {
+        deleteSubmission = document.getElementById("delete")
+        deleteSubmission.value = NaN
+    }
+
+</script>

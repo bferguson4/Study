@@ -1,0 +1,72 @@
+{% load static %}
+<html>
+
+	<link rel="stylesheet" type="text/css" href="{% static 'styles/style.css' %}">
+
+
+	<body class="studyset">
+		<section class="flashcard_links">
+			<a href="{% url 'main' %}">
+				<img class="back_arrow" src="{% static 'images/back_arrow.png' %}">
+			</a>
+		</section>
+
+		<div >
+			<form class="flashcards_form" method="POST" enctype="multipart/form-data" id="flashcardForm"> 
+				{% csrf_token %} 
+				{{ flashcards_form.as_p }} 
+				<input type="submit" value="Add Flashcard"> 
+			</form>
+		</div>
+
+		<hr>
+		
+		<div class="flashcard_links">
+			{% if flashcards %}
+			<a class="middle_links" href="{% url 'flashcards' set_id %}">
+				<img class="flashcards_img" src="{% static 'images/flashcards.png' %}">
+				Flashcards
+			</a>
+			<a class="middle_links" href="{% url 'learn' set_id  %}">
+				<img class="lightbulb" src="{% static 'images/lightbulb.png' %}">
+				Learn
+			</a>
+		</div>
+		
+		<div class="flashcards_main">
+			<table class="flashcards_table" border=1>
+				<thead>
+					<tr>
+						<th>Question</th>
+						<th>Answer</th>
+						<th>Edit</th>
+						<th>Delete</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for flashcard in flashcards %}
+					<tr>
+						<td>{{flashcard.question}}</td>
+						<td>{{flashcard.answer}}</td>
+						<td>
+						<a href="{% url 'edit' flashcard.id %}">
+							<img src="{% static 'images/pencil.png' %}">
+						</a></td>
+						<td>
+							<form method="POST" action = "{% url 'delete_flashcard' %}">
+								{% csrf_token %} 
+								<input type="hidden" name="delete_button" value={{flashcard.id}}>
+								<button class="delete_icon" type="submit"><img src="{% static 'images/trash.png' %}"></button>
+							</form>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		{% endif %}
+
+
+	</body>
+</html>
+
